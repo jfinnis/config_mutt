@@ -1,0 +1,10 @@
+*Instructions*
+* run mutt with 'mutt -F ~/.mutt/cfg/muttrc'
+
+*Version*
+* mutt-1.5.20
+
+*Patches*
+* patch-1.5.12.gj.attach_sanitize.1
+* patch-1.5.20.bk.trash_folder-purge_message.1
+* patch-1.5.20.sidebar.20090619.txt
