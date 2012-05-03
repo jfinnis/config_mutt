@@ -1,0 +1,131 @@
+# original rc settings
+source ~/.mutt/cfg/sys-mutt.rc
+
+########################### Local settings ###################################
+set certificate_file=~/.mutt/certificates
+set header_cache=~/.mutt/cache/headers
+set message_cachedir=~/.mutt/cache/bodies
+
+set abort_nosubject=no     # don't ask to abort for blank subjects
+set abort_unmodified=no    # don't ask to abort for blank messages
+set alias_file="~/.mutt/cfg/aliases.rc"
+set ascii_chars=yes        # otherwise thread display is screwed up
+set copy=no                # don't copy sent mail
+set confirmappend=no       # don't prompt when appending to a mailbox
+set delete=yes             # don't prompt to purge
+set editor="vim +':set textwidth=72' +':set wrap'"
+set forward_edit=ask-yes   # ask whether to edit the subject of forwards
+set include=yes            # include copy of original message
+set ispell="aspell -e -c"
+set implicit_autoview      # show everything it can without prompting
+set mailcap_path="~/.mutt/cfg/mailcap.rc"
+set markers=no             # don't put + at beginning of wrapped lines
+set menu_move_off=no       # bottom message doesn't scroll off
+set menu_scroll=yes        # clean scrolling rather than page up at bottom
+#set narrow_tree            # allows deeper threads to show
+set pager_context=3        # lines overlapping when using page up/down
+set pager_index_lines=6    # shows next/prev emails in pager view
+set pager_stop=yes         # don't move to next-page when scrolling to end
+set print=ask-yes          # prompt when printing emails
+set print_command="muttprint -r ~/.mutt/cfg/muttprint.rc"
+#set quit=ask-yes           # prompt before quitting
+set recall=no              # don't resume draft when composing new message
+set reply_self=no          # ignore reply-to field, list reply instead
+set resolve=no             # doesn't go to next email automatically 
+set sidebar_delim='  '     # looks good with colorscheme
+set sidebar_sort=no        # otherwise it screws up
+set sidebar_width=20       # no problems with overlap
+set sidebar_visible=yes    # startup displayed
+set sort_aux='reverse-last-date-received'
+set tilde=yes              # pads empty screen with tilde ala vim
+set to_chars=' +>-<L'      # match gmail webclient
+#set wrap =num  or -num        # play with this when tmux setup
+
+# additions for viewing of attachments/urls
+auto_view text/html application/x-pgp-message    # which files to show in body
+alternative_order text/enriched text/plain text/html *
+
+source ~/.mutt/cfg/sort-threads.rc      # macros for toggling sorting with S
+source ~/.mutt/cfg/aliases.rc           # read in aliases
+source ~/.mutt/cfg/colorscheme1         # setup colors
+#source ~/.mutt/cfg/colorscheme2
+#source ~/.mutt/cfg/colorscheme3
+
+########################### display formatting ###############################
+# default = "%4C %Z %{%b %d} %-15.15L (%4l) %s"   --   added in thread count
+set index_format="%4C %Z %{%b %d} %-15.15L %?M?(#%03M)&(%4l)? %s"
+# default = "[%a: %s]"
+set forward_format="[Fwd: %s]"
+
+###################### Gmail account settings ################################
+set from = "joshfinnis@gmail.com"
+set realname = "Joshua Finnis"
+set imap_user = "joshfinnis@gmail.com"
+set smtp_url = "smtp://joshfinnis@smtp.gmail.com:587/"
+source ~/.mutt/cfg/.passwds
+
+set folder="imaps://imap.gmail.com:993"
+set hostname=gmail.com
+set imap_check_subscribed=yes
+set imap_keepalive=900
+set mail_check=60
+set postponed="+[Gmail]/Drafts"
+set record="+[Gmail]/Sent Mail"
+set spoolfile="+INBOX"
+set timeout=300
+set trash="+[Gmail]/Trash"
+
+########################### other mail settings ##############################
+alternates jfinnis@mail.usf.edu jfinnis@cse.usf.edu zasztard@gmail.com zaszspam@gmail.com
+subscribe mutt-users@mutt.org
+
+############################### key bindings ################################
+bind generic - first-entry       # consistent bindings for - and =
+bind generic = last-entry        # to go to first/last
+bind pager - top
+bind pager = bottom
+
+bind pager z next-page           # page up and page down in both views
+bind pager Z previous-page
+bind index V collapse-thread     # toggle between folded/unfolded
+bind index O sort-mailbox        # since sidebar-open is on o now
+bind index B bounce-message      # since b toggles sidebar-visible
+bind index,pager j next-entry          # don't skip deleted messages
+bind index,pager k previous-entry
+
+bind index,pager [ previous-unread
+bind index,pager ] next-unread
+bind index "#" imap-fetch-mail   # refresh messages
+
+# key bindings to interact with sidebar
+bind index,pager K sidebar-prev 
+bind index,pager J sidebar-next
+bind index,pager o sidebar-open
+macro index,attach b '<enter-command>toggle sidebar_visible<enter><refresh>'
+macro pager b '<enter-command>toggle sidebar_visible<enter><redraw-screen>'
+# sidebar-scroll-up              # unused
+# sidebar-scroll-down            # unused
+
+#bind editor <Tab> complete-query
+bind editor ^T complete
+bind editor <space> noop 
+
+# Gmail-style keyboard shortcuts
+folder-hook +INBOX 'macro index,pager y "<save-message>=[Gmail]/All Mail<enter>" "Archive conversation"'
+folder-hook Trash 'macro index,pager y <save-message>=INBOX<enter> "Move to inbox"'
+folder-hook Trash 'macro index,pager d "<enter-command>unset trash<enter><delete-message><sync-mailbox><enter-command>set trash=\"+[Gmail]/Trash\"<enter>" "Permanently delete message"'
+bind index,pager L copy-message           # label a message (multiple labels)
+macro index,pager ! "<save-message>=[Gmail]/Spam<enter><enter>" "Report spam"
+macro index,pager I <clear-flag>O "Mark as read"
+macro index,pager U <set-flag>O "Mark as unread"
+
+# folder binds
+macro index,pager gi "<change-folder>=INBOX<enter>" "Go to inbox"
+macro index,pager ga "<change-folder>=[Gmail]/All Mail<enter>" "Go to all mail"
+macro index,pager gd "<change-folder>=[Gmail]/Drafts<enter>" "Go to drafts"
+macro index,pager gf "<change-folder>=finances<enter>" "Go to finances label"
+macro index,pager gj "<change-folder>=jobs<enter>" "Go to jobs label"
+macro index,pager gn "<change-folder>=netflix<enter>" "Go to netflix label"
+macro index,pager gs "<change-folder>=[Gmail]/Sent Mail<enter>" "Go to sent messages"
+macro index,pager gt "<change-folder>=[Gmail]/Trash<enter>" "Go to trash"
+macro index,pager gw "<change-folder>=waiting<enter>" "Go to waiting label"
