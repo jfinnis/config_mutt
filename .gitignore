@@ -1,4 +1,6 @@
 *.un~
 .passwds
+.aliases.rc
 *.sw*
 *.sw*
+
