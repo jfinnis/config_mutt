@@ -1,0 +1,57 @@
+--- PATCHES.orig	2006-07-15 15:00:00.000000000 -0700
++++ PATCHES	2006-07-15 15:51:38.000000000 -0700
+@@ -0,0 +1 @@
++patch-1.5.12.gj.attach_sanitize.1
+--- init.h.orig	2006-07-05 01:40:05.000000000 -0700
++++ init.h	2006-07-15 15:51:38.000000000 -0700
+@@ -234,6 +234,13 @@
+   ** .dt %|X .dd pad to the end of the line with character "X"
+   ** .de
+   */
++  { "attach_sanitize",	DT_BOOL, R_NONE, OPTATTACHSANITIZE, 0 },
++  /*
++  ** .pp
++  ** If set, mutt will replace "unsafe" characters (such as spaces) in
++  ** attachment file names with underscores ('_') before presenting the
++  ** file name to the user at the "Save to file:" prompt.
++  */
+   { "attach_sep",	DT_STR,	 R_NONE, UL &AttachSep, UL "\n" },
+   /*
+   ** .pp
+--- mutt.h.orig	2006-06-08 04:49:07.000000000 -0700
++++ mutt.h	2006-07-15 15:51:38.000000000 -0700
+@@ -328,6 +328,7 @@
+   OPTASCIICHARS,
+   OPTASKBCC,
+   OPTASKCC,
++  OPTATTACHSANITIZE,
+   OPTATTACHSPLIT,
+   OPTAUTOEDIT,
+   OPTAUTOTAG,
+--- recvattach.c.orig	2006-04-18 08:25:33.000000000 -0700
++++ recvattach.c	2006-07-15 16:01:32.000000000 -0700
+@@ -395,10 +395,13 @@
+   
+   if (body->filename) 
+   {
++    strfcpy (tfile, body->filename, sizeof (tfile));
++    if (option (OPTATTACHSANITIZE))
++      mutt_sanitize_filename (tfile, 0);
+     if (directory && *directory)
+-      mutt_concat_path (buf, *directory, mutt_basename (body->filename), sizeof (buf));
++      mutt_concat_path (buf, *directory, mutt_basename (tfile), sizeof (buf));
+     else
+-      strfcpy (buf, body->filename, sizeof (buf));
++      strfcpy (buf, tfile, sizeof (buf));
+   }
+   else if(body->hdr &&
+ 	  body->encoding != ENCBASE64 &&
+@@ -486,6 +489,8 @@
+ 
+ 	  strfcpy (buf, mutt_basename (NONULL (top->filename)), sizeof (buf));
+ 
++	  if (option (OPTATTACHSANITIZE))
++	    mutt_sanitize_filename (buf, 0);
+ 	  if (mutt_get_field (_("Save to file: "), buf, sizeof (buf),
+ 				    M_FILE | M_CLEAR) != 0 || !buf[0])
+ 	    return;

@@ -1,0 +1,26 @@
+color normal  default default
+color attachment brightyellow default
+color hdrdefault cyan default
+color indicator white black
+color markers brightred default
+color quoted  green default
+color sidebar_new brightyellow default
+color signature cyan default
+color status  brightgreen blue
+color tilde blue default
+color tree  brightred default
+
+color index red black ~D
+color index magenta black ~T
+
+color header brightgreen default ^From:
+color header brightcyan default ^To:
+color header brightcyan default ^Reply-To:
+color header brightcyan default ^Cc:
+color header brightblue default ^Subject:
+
+color body  brightred default [\-\.+_a-zA-Z0-9]+@[\-\.a-zA-Z0-9]+
+# identifies email addresses
+
+color body  brightblue default (https?|ftp)://[\-\.,/%~_:?&=\#a-zA-Z0-9]+
+# identifies URLs
