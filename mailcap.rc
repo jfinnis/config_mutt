@@ -1,10 +1,4 @@
 text/html; lynx -dump -force_html %s; needsterminal; copiousoutput
 application/pdf; evince %s &
 application/msword; antiword %s; copiousoutput
-image/jpeg; eog %s &
-image/gif; eog %s &
-image/GIF; eog %s &
-image/JPG; eog %s &
-image/jpg; eog %s &
-image/PNG; eog %s &
-image/png; eog %s &
+image/*; eog %s
