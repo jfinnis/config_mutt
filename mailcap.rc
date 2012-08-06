@@ -3,3 +3,4 @@ application/pdf; evince %s &
 application/msword; antiword %s; copiousoutput
 image/*; eog %s
 image/*; true; copiousoutput
+video/*; vlc %s
